@@ -1,3 +1,6 @@
+import sys
+import os
+
 
 nytimes_com = '''
 This New Liquid Is Magnetic, and Mesmerizing
@@ -35,11 +38,28 @@ Twitter and Square Chief Executive Officer Jack Dorsey
 '''
 
 # write your code here
+
+folder = sys.argv[1]
+if not os.access(folder, os.F_OK):
+    os.mkdir(folder)
 while True:
     url = input()
     if url == "exit":
         break
-    elif url == "bloomberg.com":
-        print(bloomberg_com)
-    elif url == "nytimes.com":
-        print(nytimes_com)
+    elif "." in url:
+        if url == "bloomberg.com":
+            with open(f"{folder}/bloomberg", "w") as web_page:
+                print(bloomberg_com)
+                print(bloomberg_com, file=web_page)
+        elif url == "nytimes.com":
+            with open(f"{folder}/nytimes", "w") as web_page:
+                print(nytimes_com)
+                print(nytimes_com, file=web_page)
+        else:
+            print("Error: Incorrect URL")
+    else:
+        if os.access(f"{folder}/{url}", os.F_OK):
+            with open(f"{folder}/{url}", "r") as web_page:
+                print(web_page.read())
+        else:
+            print("Error: Incorrect URL")
