@@ -1,5 +1,6 @@
 import sys
 import os
+from collections import deque
 
 
 nytimes_com = '''
@@ -42,21 +43,32 @@ Twitter and Square Chief Executive Officer Jack Dorsey
 folder = sys.argv[1]
 if not os.access(folder, os.F_OK):
     os.mkdir(folder)
+page_stack = deque()
+current_page = None
 while True:
     url = input()
     if url == "exit":
         break
     elif "." in url:
         if url == "bloomberg.com":
+            if current_page:
+                page_stack.append(current_page)
             with open(f"{folder}/bloomberg", "w") as web_page:
                 print(bloomberg_com)
                 print(bloomberg_com, file=web_page)
+            current_page = bloomberg_com
         elif url == "nytimes.com":
+            if current_page:
+                page_stack.append(current_page)
             with open(f"{folder}/nytimes", "w") as web_page:
                 print(nytimes_com)
                 print(nytimes_com, file=web_page)
+            current_page = nytimes_com
         else:
             print("Error: Incorrect URL")
+    elif url == "back":
+        if page_stack:
+            print(page_stack.pop())
     else:
         if os.access(f"{folder}/{url}", os.F_OK):
             with open(f"{folder}/{url}", "r") as web_page:
