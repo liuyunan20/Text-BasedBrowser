@@ -3,6 +3,7 @@ import os
 from collections import deque
 import requests
 from bs4 import BeautifulSoup
+from colorama import Fore
 
 
 folder = sys.argv[1]
@@ -35,7 +36,10 @@ while True:
     text = []
     tags = soup.find_all(["p", "h1", "h2", "a", "ul", "ol", "li"])
     for tag in tags:
-        tag_text = tag.text.strip()
+        if tag.has_attr('href'):
+            tag_text = Fore.BLUE + tag.text.strip()
+        else:
+            tag_text = tag.text.strip()
         if tag_text:
             text.append(tag_text)
     with open(f"{folder}/{file_name}", "w", encoding="UTF-8") as web_page:
